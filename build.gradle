@@ -14,8 +14,12 @@ buildscript {
 plugins {
     id 'java'
     id 'eclipse'
-    id 'org.springframework.boot' version '2.2.2.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'org.springframework.boot' version '2.4.1'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+}
+
+wrapper {
+    gradleVersion = '6.7.1'
 }
 
 group 'org.example'
@@ -27,12 +31,25 @@ repositories {
 }
 
 dependencies {
+
     implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.apache.maven.plugins:maven-surefire-plugin:2.21.0')
+    implementation('org.springframework.boot:spring-boot-starter-mustache')
+
     implementation('org.projectlombok:lombok')
+    annotationProcessor('org.projectlombok:lombok')
+    testImplementation('org.projectlombok:lombok')
+    testAnnotationProcessor('org.projectlombok:lombok')
+
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation("org.mariadb.jdbc:mariadb-java-client")
+    implementation('com.h2database:h2')
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 test {

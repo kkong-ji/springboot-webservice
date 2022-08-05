@@ -43,7 +43,9 @@
 
  `http://localhost:8080/hello/dto` 접속에 성공한 모습
 
--> 해결
+<br>
+
+### 해결방안
 
 기존: `HelloController`
 ```
@@ -64,3 +66,34 @@
         return new HelloResponseDto(name, amount);
     }
 ```
+
+<br>
+
+### 2) h2 console에서 `jdbc:h2:mem:testdb` 로 접속이 안되는 오류
+![제목 없음](https://user-images.githubusercontent.com/87354210/183019314-03ed1ba5-e431-4e4b-8351-81b1acac934a.png)
+
+<br> 
+
+책에서 설명한대로 JDBC URL에 입력한 경로인 `mem:testdb` 라는 데이터베이스를 찾을 수 없다고 뜨면서 오류가 발생했다.
+또는 데이터베이스를 미리 생성할 수도 없다. h2 기본 설정 자체에서 보안상의 이유로 생성을 못하게 해놓은 것으로 보인다.
+구글링 해본 결과, h2가 `1.4.197` 과 `1.4.198` 버전 사이에 대규모 업데이트가 되면서 데이터베이스를 미리 생성하는 것을 
+방지하도록 설정되었다는 것을 알 수 있었다.  
+
+<br>
+
+### 해결방안
+
+h2의 버전을 1.4.198보다 낮은 버전으로 설정
+
+`build.gradle`
+
+```
+runtimeOnly('com.h2database:h2:1.4.197')
+```
+
+<br>
+
+![image](https://user-images.githubusercontent.com/87354210/183020582-10e63d70-950f-49f3-a464-3fc13525d90d.png)  
+
+제대로 접속이 잘 되는 모습.
+

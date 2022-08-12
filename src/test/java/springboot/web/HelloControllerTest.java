@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,15 +17,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @ExtendWith(SpringExtension.class) // 스프링부트 테스트와 JUnit 사이에 연결자 역할
 @WebMvcTest(controllers = HelloController.class,
-        excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)})    // Web(Spring MVC)에 집중할 수 있는 어노테이션
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+        }
+)    // Web(Spring MVC)에 집중할 수 있는 어노테이션
 public class HelloControllerTest {
 
     @Autowired // 스프링이 관리하는 Bean 주입 받기
     private MockMvc mvc; // 웹 API 테스트(GET, POST 등 API 테스트)
 
+    @WithMockUser(roles="USER")
     @Test
     public void returnHelloOk() throws Exception {
         String hello = "hello";
@@ -35,6 +38,7 @@ public class HelloControllerTest {
                 .andExpect(content().string(hello)); // Controller => "hello" 리턴 값 맞는지 검증
     }
 
+    @WithMockUser(roles="USER")
     @Test
     public void returnHelloDto() throws Exception {
         String name = "hello";

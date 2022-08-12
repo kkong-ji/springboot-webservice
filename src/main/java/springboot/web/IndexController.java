@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import springboot.config.auth.LoginUser;
 import springboot.config.auth.dto.SessionUser;
 import springboot.service.posts.PostsService;
 import springboot.web.dto.PostsResponseDto;
@@ -19,10 +20,9 @@ public class IndexController {
     private final HttpSession httpSession;
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("posts", postsService.findAllDesc());
+    public String index(Model model, @LoginUser SessionUser user) {
 
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+        model.addAttribute("posts", postsService.findAllDesc());
 
         if (user != null) {
             model.addAttribute("userName", user.getName());
